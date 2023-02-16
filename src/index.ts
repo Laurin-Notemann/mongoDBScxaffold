@@ -1,13 +1,17 @@
 import { app } from "./server/app";
-import { config } from "dotenv";
-
-config();
-
-const PORT = process.env.EXPRESS_PORT || 3050;
+import { PORT } from "./secrets";
+import { connectToDatabase } from "./connection/connection";
 
 const main = () => {
-  app.listen(PORT, () => {
+  app.listen(PORT, async () => {
+    const [error, msg] = await connectToDatabase()
+    if (error != null)
+      console.log("Could not connect to Database", error)
+    
     console.log("Server is listening on port: ", PORT);
+
+    console.log(msg)
+
   });
 };
 
